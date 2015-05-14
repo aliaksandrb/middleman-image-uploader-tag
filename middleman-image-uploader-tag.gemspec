@@ -1,24 +1,29 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
+require 'middleman-image-uploader-tag/version'
 
 Gem::Specification.new do |s|
   s.name        = "middleman-image-uploader-tag"
-  s.version     = "0.0.1"
+  s.version     = ImageUploaderTag::VERSION
   s.platform    = Gem::Platform::RUBY
-  # s.authors     = ["Your Name"]
-  # s.email       = ["email@example.com"]
+  s.authors     = ["Aliaksandr Buhayeu"]
+  s.email       = ["aliaksandr.buhayeu@gmail.com"]
   # s.homepage    = "http://example.com"
-  # s.summary     = %q{A short summary of your extension}
-  # s.description = %q{A longer description of your extension}
+  s.summary     = %q{Image tag helper with automatic upload to external services}
+  s.description = %q{
+    The remote_image_tag helper provide you automatic image upload to external
+    hosting services with public back-link mapping
+  }
+  s.license = "MIT"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  
+
   # The version of middleman-core your extension depends on
   s.add_runtime_dependency("middleman-core", [">= 3.3.12"])
-  
+
   # Additional dependencies
   # s.add_runtime_dependency("gem-name", "gem-version")
 end
