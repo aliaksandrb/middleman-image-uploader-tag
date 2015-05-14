@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require 'middleman-image-uploader-tag/version'
+require 'middleman/image-uploader-tag/version'
 
 Gem::Specification.new do |s|
   s.name        = "middleman-image-uploader-tag"
-  s.version     = ImageUploaderTag::VERSION
+  s.version     = Middleman::ImageUploaderTag::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Aliaksandr Buhayeu"]
   s.email       = ["aliaksandr.buhayeu@gmail.com"]
