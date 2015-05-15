@@ -1,1 +1,1 @@
-require 'middleman-image-uploader-tag'
+require_relative 'middleman-image-uploader-tag'

@@ -1,18 +1,27 @@
 require 'middleman-core'
+require 'middleman-core/extensions'
 
 module Middleman
   module ImageUploaderTag
+
     class ImageUploaderTagExtension < ::Middleman::Extension
-      option :my_option, 'default', 'An example option'
+      option :cloudinary, nil, 'Cloudinary API options'
 
       def initialize(app, options_hash={}, &block)
-        # Call super to build options from the options_hash
         super
 
         # Require libraries only when activated
         # require 'necessary/library'
-        # set up your extension
         # puts options.my_option
+        #app.send :include, Helpers
+      end
+
+      helpers do
+        def remote_image_tag(image_path, params={})
+          klass = ::Middleman::ImageUploaderTag::ImageUploaderTagExtension
+
+          image_tag klass.get_remote_path(klass.provider, image_path), params
+        end
       end
 
       def after_configuration
@@ -23,18 +32,17 @@ module Middleman
       # def manipulate_resource_list(resources)
       # end
       #
-      # module do
-      #   def a_helper
-      #   end
-      # end
+      def self.provider
+        :cloudinary
+      end
+
+      def self.get_remote_path(provider, image_path)
+        "https://res.cloudinary.com/aliaksandrb/image/upload/t_media_lib_thumb/v1431639342/sample.jpg"
+      end
+
+      #alias :included :registered
     end
-    #
-    # Register extensions which can be activated
-    # Make sure we have the version of Middleman we expect
-    # Name param may be omited, it will default to underscored
-    # version of class name
-    # MyExtension.register(:my_extension)
-    #
+
   end
 end
 
