@@ -5,21 +5,23 @@ module Middleman
   module ImageUploaderTag
 
     class ImageUploaderTagExtension < ::Middleman::Extension
-      option :cloudinary, nil, 'Cloudinary API options'
+      cattr_reader :provider_options
+
+      option :provider, nil, 'CDN provider name'
+      option :provider_config, nil, 'CDN provider config options'
 
       def initialize(app, options_hash={}, &block)
         super
 
         # Require libraries only when activated
         # require 'necessary/library'
-        # puts options.my_option
         #app.send :include, Helpers
+        @@provider_options = options
       end
 
       helpers do
         def remote_image_tag(image_path, params={})
           klass = ::Middleman::ImageUploaderTag::ImageUploaderTagExtension
-
           image_tag klass.get_remote_path(klass.provider, image_path), params
         end
       end
@@ -32,12 +34,15 @@ module Middleman
       # def manipulate_resource_list(resources)
       # end
       #
+
       def self.provider
-        :cloudinary
+        Object.const_get(
+          "::Middleman::ImageUploaderTag::#{provider_options.provider.to_s.capitalize}"
+        ).new(provider_options.provider_config)
       end
 
       def self.get_remote_path(provider, image_path)
-        "https://res.cloudinary.com/aliaksandrb/image/upload/t_media_lib_thumb/v1431639342/sample.jpg"
+        provider.get_remote_link(image_path)
       end
 
       #alias :included :registered
