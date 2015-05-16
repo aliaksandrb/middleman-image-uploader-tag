@@ -1,4 +1,5 @@
 require 'middleman-core'
+require_relative 'middleman/image-uploader-tag/exceptions'
 require_relative 'middleman/image-uploader-tag/extension'
 require_relative 'middleman/image-uploader-tag/cdns/base.rb'
 require_relative 'middleman/image-uploader-tag/cdns/cloudinary.rb'

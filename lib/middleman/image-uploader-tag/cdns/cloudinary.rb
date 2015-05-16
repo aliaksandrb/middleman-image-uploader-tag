@@ -1,6 +1,4 @@
 require 'cloudinary'
-#require 'cloudinary/uploader'
-#require 'cloudinary/utils'
 
 module Middleman
   module ImageUploaderTag
