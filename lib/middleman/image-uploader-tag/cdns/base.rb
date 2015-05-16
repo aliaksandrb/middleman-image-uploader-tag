@@ -1,7 +1,7 @@
 module Middleman
   module ImageUploaderTag
 
-    class Base
+    class BaseCDN
     end
 
   end
