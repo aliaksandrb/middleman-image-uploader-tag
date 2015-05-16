@@ -7,36 +7,36 @@ module Middleman
     class ImageUploaderTagExtension < ::Middleman::Extension
       option :provider, nil, 'CDN provider name'
       option :provider_config, nil, 'CDN provider config options'
+      option :remote_images_dir, nil, %q{
+        Folder where images are placed.
+        Must be outside the :images_dir of the Middleman'
+      }
 
       def initialize(app, options_hash = {}, &block)
         super
 
         # Require libraries only when activated
         # require 'necessary/library'
-        #app.send :include, Helpers
+
         @@provider_options = options
+        @@app = app
+
+        img_dir = 'source/' + self.class.remote_images_dir
+        unless Dir.exist?(img_dir)
+          Dir.mkdir(img_dir)
+        end
       end
 
       helpers do
         def remote_image_tag(image_name, params = {})
           klass = ::Middleman::ImageUploaderTag::ImageUploaderTagExtension
-          image_path = klass.image_location(image_name)
 
-          image_tag klass.get_remote_path(klass.provider, image_path), params
+          image_tag klass.get_remote_path(klass.provider, image_name), params
         end
       end
 
-      def after_configuration
-        # Do something
-      end
-      #
-      # A Sitemap Manipulator
-      # def manipulate_resource_list(resources)
-      # end
-      #
-
-      def self.image_location(image_name)
-        "/home/k3/Development/blog/source/images/test.png"
+      def self.image_location(image_path)
+        "#{app.root_path}/source/#{remote_images_dir}/#{image_path}"
       end
 
       def self.provider
@@ -45,17 +45,30 @@ module Middleman
         ).new(provider_options.provider_config)
       end
 
-      def self.get_remote_path(provider, image_path)
-        provider.get_remote_link(image_path)
+      def self.get_remote_path(provider, image_name)
+        if app.config.environment == :build
+          image_path = image_location(image_name)
+          raise NotFound unless File.exist?(image_path)
+
+          provider.get_remote_link(image_path)
+        else
+          "../#{remote_images_dir}/#{image_name}"
+        end
       end
 
       def self.provider_options
         @@provider_options
       end
-      #alias :included :registered
+
+      def self.app
+        @@app
+      end
+
+      def self.remote_images_dir
+        @@remote_images_dir ||= provider_options.remote_images_dir || 'remote_images'
+      end
     end
 
   end
 end
-
 
