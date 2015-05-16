@@ -29,9 +29,13 @@ module Middleman
 
       helpers do
         def remote_image_tag(image_name, params = {})
+          image_tag remote_image_tag_link(image_name), params
+        end
+
+        def remote_image_tag_link(image_name)
           klass = ::Middleman::ImageUploaderTag::ImageUploaderTagExtension
 
-          image_tag klass.get_remote_path(klass.provider, image_name), params
+          klass.get_remote_path(klass.provider, image_name)
         end
       end
 
