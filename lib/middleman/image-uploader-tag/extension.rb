@@ -37,7 +37,7 @@ module Middleman
       end
 
       def self.image_location(image_path)
-        "#{app.root_path}/source/#{remote_images_dir}/#{image_path}"
+        File.join(app.root, 'source', remote_images_dir, image_path)
       end
 
       def self.provider
