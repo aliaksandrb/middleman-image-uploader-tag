@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
 
-$:.push File.expand_path("../lib", __FILE__)
+$:.push File.expand_path('../lib', __FILE__)
 require 'middleman/image-uploader-tag/version'
 
 Gem::Specification.new do |s|
-  s.name        = "middleman-image-uploader-tag"
+  s.name        = 'middleman-image-uploader-tag'
   s.version     = Middleman::ImageUploaderTag::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Aliaksandr Buhayeu"]
-  s.email       = ["aliaksandr.buhayeu@gmail.com"]
-  # s.homepage    = "http://example.com"
+  s.authors     = ['Aliaksandr Buhayeu']
+  s.email       = ['aliaksandr.buhayeu@gmail.com']
+  s.homepage    = 'https://github.com/aliaksandrb/middleman-image-uploader-tag'
   s.summary     = %q{Image tag helper with automatic upload to external services}
   s.description = %q{
     The remote_image_tag helper provide you automatic image upload to external
@@ -24,4 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'middleman-core', ['>= 3.3.12']
   s.add_runtime_dependency 'cloudinary', '~>1.1.0'
+
+  s.add_development_dependency 'minitest', '~> 5.6.1'
+  s.add_development_dependency 'fivemat', '~> 1.3.1'
 end

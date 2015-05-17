@@ -9,9 +9,3 @@ group :development do
   gem 'yard'
 end
 
-group :test do
-  gem 'cucumber'
-  gem 'fivemat'
-  gem 'aruba'
-  gem 'rspec'
-end

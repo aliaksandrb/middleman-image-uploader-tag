@@ -4,7 +4,7 @@ require 'middleman-core/extensions'
 module Middleman
   module ImageUploaderTag
 
-    class ImageUploaderTagExtension < ::Middleman::Extension
+    class Extension < ::Middleman::Extension
       option :provider, nil, 'CDN provider name'
       option :provider_config, nil, 'CDN provider config options'
       option :remote_images_dir, nil, %q{
@@ -33,7 +33,7 @@ module Middleman
         end
 
         def remote_image_tag_link(image_name)
-          klass = ::Middleman::ImageUploaderTag::ImageUploaderTagExtension
+          klass = ::Middleman::ImageUploaderTag::Extension
 
           klass.get_remote_path(klass.provider, image_name)
         end
