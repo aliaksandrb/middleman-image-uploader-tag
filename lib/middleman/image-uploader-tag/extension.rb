@@ -21,10 +21,7 @@ module Middleman
         @@provider_options = options
         @@app = app
 
-        img_dir = 'source/' + self.class.remote_images_dir
-        unless Dir.exist?(img_dir)
-          Dir.mkdir(img_dir)
-        end
+        self.class.create_images_dir!
       end
 
       helpers do
@@ -70,6 +67,12 @@ module Middleman
 
       def self.remote_images_dir
         @@remote_images_dir ||= provider_options.remote_images_dir || 'remote_images'
+      end
+
+      def self.create_images_dir!
+        img_dir = File.join(app.root, 'source', remote_images_dir)
+
+        Dir.mkdir(img_dir) unless Dir.exist?(img_dir)
       end
     end
 

@@ -4,4 +4,5 @@ require 'minitest/autorun'
 require 'minitest/unit'
 require 'minitest/pride'
 
+ENV['MM_ROOT'] = File.join(PROJECT_ROOT_PATH, 'test', 'fixtures', 'test')
 
