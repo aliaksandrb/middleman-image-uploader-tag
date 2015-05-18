@@ -41,6 +41,9 @@ module Middleman
       end
 
       def self.provider
+        # need cache here i believe
+        # handle cases for snake_case_name
+        # handle unknown provider
         Object.const_get(
           "::Middleman::ImageUploaderTag::#{provider_options.provider.to_s.capitalize}CDN"
         ).new(provider_options.provider_config)

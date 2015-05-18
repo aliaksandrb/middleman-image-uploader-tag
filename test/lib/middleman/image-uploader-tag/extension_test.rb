@@ -22,10 +22,10 @@ class ExtensionTest < Minitest::Test
   end
 
   def test_remote_images_dir
-    set_provider_options ext_class, { remote_images_dir: 'test_folder' }
+    set_provider_options ext_class, remote_images_dir: 'test_folder'
     assert_equal 'test_folder', ext_class.remote_images_dir
 
-    set_provider_options ext_class, { remote_images_dir: nil }
+    set_provider_options ext_class, remote_images_dir: nil
     assert_equal 'remote_images', ext_class.remote_images_dir
   end
 
@@ -54,7 +54,9 @@ class ExtensionTest < Minitest::Test
   end
 
   def test_provider
-    skip
+    set_provider_options ext_class, provider_options_stub
+
+    assert_instance_of Middleman::ImageUploaderTag::CloudinaryCDN, ext_class.provider
   end
 
   def test_get_remote_path
@@ -74,6 +76,12 @@ class ExtensionTest < Minitest::Test
         provider_options.public_send("#{key}=", value)
       end
     end
+  end
+
+  def provider_options_stub
+    { provider: :cloudinary,
+      provider_config: { api_key: 'test', api_secret: 'test' }
+    }
   end
 end
 
