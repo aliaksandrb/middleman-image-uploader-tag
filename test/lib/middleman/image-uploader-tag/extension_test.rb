@@ -1,4 +1,5 @@
 require './test/test_helper'
+require 'fileutils'
 
 class ExtensionTest < Minitest::Test
   attr_reader :application, :ext_instance, :ext_class
@@ -34,7 +35,7 @@ class ExtensionTest < Minitest::Test
 
     assert Dir.exists?(remote_images_dir)
 
-    Dir.rmdir(remote_images_dir)
+    FileUtils.rm_rf(remote_images_dir)
     refute Dir.exists?(remote_images_dir)
 
     ext_class.create_images_dir!
@@ -59,11 +60,48 @@ class ExtensionTest < Minitest::Test
     assert_instance_of Middleman::ImageUploaderTag::CloudinaryCDN, ext_class.provider
   end
 
-  def test_get_remote_path
-    skip
+  def test_get_remote_path_during_development
+    create_fake_image!('test.jpg')
+    create_fake_image!('test/test.jpg')
+
+    set_app_config environment: :development
+    remote_images_dir = File.join(application.root, 'source', ext_class.remote_images_dir)
+
+    assert_equal remote_images_dir + '/test.jpg', ext_class.get_remote_path('test.jpg')
+    assert_equal remote_images_dir + '/test.jpg', ext_class.get_remote_path('/test.jpg')
+    assert_equal remote_images_dir + '/test/test.jpg', ext_class.get_remote_path('test/test.jpg')
+  end
+
+  def test_get_remote_path_raises_exception_for_absent_image
+    image = ext_class.image_location('/test.jpg')
+    File.delete(image) if File.exist? image
+
+    assert_raises Middleman::ImageUploaderTag::NotFound do
+      ext_class.get_remote_path 'test.jpg'
+    end
+  end
+
+  def test_get_remote_path_during_build
+    set_app_config environment: :build
+    create_fake_image!('test.jpg')
+    image = ext_class.image_location('test.jpg')
+
+    mock = Minitest::Mock.new
+    mock.expect :get_remote_link, image, [image]
+
+    ext_class.stub :provider, mock do
+      ext_class.get_remote_path 'test.jpg'
+    end
+    mock.verify
   end
 
   private
+
+  def set_app_config(options = {})
+    options.each do |key, value|
+      application.config.public_send("#{key}=", value)
+    end
+  end
 
   def set_provider_options(extension, options = {})
     provider_options = extension.provider_options
@@ -82,6 +120,14 @@ class ExtensionTest < Minitest::Test
     { provider: :cloudinary,
       provider_config: { api_key: 'test', api_secret: 'test' }
     }
+  end
+
+  def create_fake_image!(name)
+    image = ext_class.image_location(name)
+    dir = File.dirname(image)
+    Dir.mkdir(dir) unless Dir.exists? dir
+
+    `touch #{image}` unless File.exists? image
   end
 end
 

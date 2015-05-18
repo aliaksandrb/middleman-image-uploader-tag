@@ -32,7 +32,7 @@ module Middleman
         def remote_image_tag_link(image_name)
           klass = ::Middleman::ImageUploaderTag::Extension
 
-          klass.get_remote_path(klass.provider, image_name)
+          klass.get_remote_path image_name
         end
       end
 
@@ -49,14 +49,14 @@ module Middleman
         ).new(provider_options.provider_config)
       end
 
-      def self.get_remote_path(provider, image_name)
-        if app.config.environment == :build
-          image_path = image_location(image_name)
-          raise NotFound unless File.exist?(image_path)
+      def self.get_remote_path(image_name)
+        image_path = image_location(image_name)
+        raise NotFound unless File.exist?(image_path)
 
+        if app.config.environment == :build
           provider.get_remote_link(image_path)
         else
-          "../#{remote_images_dir}/#{image_name}"
+          image_path
         end
       end
 

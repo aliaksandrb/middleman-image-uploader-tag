@@ -3,3 +3,6 @@
 
 # Ignore pkg folder
 /pkg
+
+# Ignore temporary remote images folder
+test/fixtures/test/source/remote_images/
