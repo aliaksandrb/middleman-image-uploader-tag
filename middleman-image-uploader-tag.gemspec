@@ -27,4 +27,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.6.1'
   s.add_development_dependency 'fivemat', '~> 1.3.1'
+  s.add_development_dependency 'minitest-stub-const'
 end

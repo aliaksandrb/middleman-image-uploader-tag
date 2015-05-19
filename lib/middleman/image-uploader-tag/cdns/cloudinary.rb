@@ -6,7 +6,7 @@ module Middleman
     class CloudinaryCDN < BaseCDN
 
       def initialize(config)
-        #check for requried keys
+        #check for requried keys before it would be check by service
         Cloudinary.config do |c|
           config.each { |key, value| c.public_send("#{key}=", value) }
         end

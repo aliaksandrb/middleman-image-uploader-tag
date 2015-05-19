@@ -1,4 +1,5 @@
 require './test/test_helper'
+require 'minitest/stub_const'
 require 'fileutils'
 
 class ExtensionTest < Minitest::Test
@@ -7,6 +8,7 @@ class ExtensionTest < Minitest::Test
   def setup
     @application = Class.new(Middleman::Application)
     @ext_instance = Middleman::ImageUploaderTag::Extension.new(@application)
+    @ext_instance.app = @application
     @ext_class = @ext_instance.class
   end
 
@@ -42,8 +44,47 @@ class ExtensionTest < Minitest::Test
     assert Dir.exists?(remote_images_dir)
   end
 
-  def test_helpers
-    skip
+  def test_helpers_being_defined
+    assert_respond_to application, :remote_image_tag
+    assert_respond_to application, :remote_image_tag_link
+  end
+
+  def test_remote_image_tag_helper
+    # I`m not sure if it`s the right way..
+    create_fake_image!('test.jpg')
+    image = ext_class.image_location('test.jpg')
+    called = false
+    name_called = ''
+
+    application.class.class_eval do
+      define_method :image_tag do |name, params|
+        params ||= {}
+        called = true
+        name_called = name
+        'test.jpg'
+      end
+    end
+
+    application.stub :remote_image_tag_link, image do
+      application.remote_image_tag 'test.jpg'
+    end
+
+    assert_equal true, called
+    assert_equal image, name_called
+  end
+
+  def test_remote_image_tag_link_helper
+    create_fake_image!('test.jpg')
+    image = ext_class.image_location('test.jpg')
+
+    mock = Minitest::Mock.new
+    mock.expect :get_remote_path, image, ['test.jpg']
+
+    ::Middleman::ImageUploaderTag.stub_const(:Extension, mock) do
+      application.remote_image_tag_link 'test.jpg'
+    end
+
+    mock.verify
   end
 
   def test_image_location
