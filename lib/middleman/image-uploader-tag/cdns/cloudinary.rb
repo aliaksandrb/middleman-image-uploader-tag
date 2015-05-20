@@ -4,11 +4,13 @@ module Middleman
   module ImageUploaderTag
 
     class CloudinaryCDN < BaseCDN
+      OBLIGATORY_OPTIONS = [:cloud_name, :api_secret, :api_key]
 
       def initialize(config)
-        #check for requried keys before it would be check by service
+        raise AuthorizationRequired if OBLIGATORY_OPTIONS.any? { |k| config[k].nil? }
+
         Cloudinary.config do |c|
-          config.each { |key, value| c.public_send("#{key}=", value) }
+          config.each { |key, value| c.public_send(:"#{key}=", value) unless value.nil? }
         end
       end
 

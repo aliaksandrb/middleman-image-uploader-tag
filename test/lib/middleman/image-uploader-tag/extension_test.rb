@@ -159,7 +159,7 @@ class ExtensionTest < Minitest::Test
 
   def provider_options_stub
     { provider: :cloudinary,
-      provider_config: { api_key: 'test', api_secret: 'test' }
+      provider_config: { api_key: 'test', api_secret: 'test', cloud_name: 'test' }
     }
   end
 
