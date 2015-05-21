@@ -15,10 +15,15 @@ module Middleman
       end
 
       def get_remote_link(image_path)
+        raise NotFound if !image_path || !File.exist?(image_path.to_s)
+
         upload_to_cloud(image_path)[:secure_url]
       end
 
       def upload_to_cloud(file, options = {})
+        # rescue Cloudinary exceptions? (timeouts, limits and so on..)
+        raise NotFound if !file || !File.exist?(file.to_s)
+
         options.merge!({ use_filename: true, unique_filename: false })
 
         Cloudinary::Uploader.upload(file, options).inject({}) do |memo, (k,v)|

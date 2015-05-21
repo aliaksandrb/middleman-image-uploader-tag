@@ -58,12 +58,54 @@ class CloudinaryCDNTest < Minitest::Test
     assert_respond_to new_cdn, :upload_to_cloud
   end
 
+  def test_upload_to_cloud_expects_image_path_argument
+    assert_raises Middleman::ImageUploaderTag::NotFound do
+      cdn.new(config).upload_to_cloud nil
+    end
+
+    assert_raises Middleman::ImageUploaderTag::NotFound do
+      cdn.new(config).upload_to_cloud 'fake.jpg'
+    end
+  end
+
   def test_upload_to_cloud
-    skip
+    image_path = extension.image_location('test.jpg')
+    `touch #{image_path}` unless File.exists? image_path
+
+    mock = Minitest::Mock.new
+    mock.expect :upload, { 'secure_url': 'http://cdn.com/test.jpg' }, [
+      image_path,
+      { use_filename: true, unique_filename: false }
+    ]
+
+    Cloudinary.stub_const(:Uploader, mock) do
+      cdn.new(config).upload_to_cloud(image_path)
+    end
+
+    mock.verify
+  end
+
+  def test_get_remote_link_expects_image_path_argument
+    assert_raises Middleman::ImageUploaderTag::NotFound do
+      cdn.new(config).get_remote_link nil
+    end
+
+    assert_raises Middleman::ImageUploaderTag::NotFound do
+      cdn.new(config).get_remote_link 'fake.jpg'
+    end
   end
 
   def test_get_remote_link
-    skip
+    image_path = extension.image_location('test.jpg')
+    `touch #{image_path}` unless File.exists? image_path
+
+    Cloudinary::Uploader.instance_eval do
+      def upload(file, options)
+        { 'secure_url': 'http://cdn.com/test.jpg' }
+      end
+    end
+
+    assert_equal 'http://cdn.com/test.jpg', cdn.new(config).get_remote_link(image_path)
   end
 
   private
@@ -81,6 +123,10 @@ class CloudinaryCDNTest < Minitest::Test
 
   def clear_config!
     Cloudinary.class_variable_set(:@@config, OpenStruct.new({}))
+  end
+
+  def extension
+    Middleman::ImageUploaderTag::Extension.new(Class.new(Middleman::Application)).class
   end
 end
 

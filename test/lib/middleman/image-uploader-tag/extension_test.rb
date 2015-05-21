@@ -170,5 +170,6 @@ class ExtensionTest < Minitest::Test
 
     `touch #{image}` unless File.exists? image
   end
+
 end
 
