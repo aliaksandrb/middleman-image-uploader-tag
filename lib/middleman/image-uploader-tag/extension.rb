@@ -56,7 +56,7 @@ module Middleman
         if app.config.environment == :build
           provider.get_remote_link(image_path)
         else
-          image_path
+          image_name
         end
       end
 

@@ -106,11 +106,10 @@ class ExtensionTest < Minitest::Test
     create_fake_image!('test/test.jpg')
 
     set_app_config environment: :development
-    remote_images_dir = File.join(application.root, 'source', ext_class.remote_images_dir)
 
-    assert_equal remote_images_dir + '/test.jpg', ext_class.get_remote_path('test.jpg')
-    assert_equal remote_images_dir + '/test.jpg', ext_class.get_remote_path('/test.jpg')
-    assert_equal remote_images_dir + '/test/test.jpg', ext_class.get_remote_path('test/test.jpg')
+    assert_equal 'test.jpg', ext_class.get_remote_path('test.jpg')
+    assert_equal '/test.jpg', ext_class.get_remote_path('/test.jpg')
+    assert_equal 'test/test.jpg', ext_class.get_remote_path('test/test.jpg')
   end
 
   def test_get_remote_path_raises_exception_for_absent_image
@@ -140,7 +139,7 @@ class ExtensionTest < Minitest::Test
 
   def set_app_config(options = {})
     options.each do |key, value|
-      application.config.public_send("#{key}=", value)
+      application.config.public_send(:"#{key}=", value)
     end
   end
 
@@ -152,7 +151,7 @@ class ExtensionTest < Minitest::Test
         # reset internal state because of the nil guard technic
         extension.class_variable_set("@@#{key}", nil)
 
-        provider_options.public_send("#{key}=", value)
+        provider_options.public_send(:"#{key}=", value)
       end
     end
   end
