@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
     The remote_image_tag helper provide you automatic image upload to external
     hosting services with public back-link mapping
   }
-  s.license = "MIT"
+  s.license = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

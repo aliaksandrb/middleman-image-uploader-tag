@@ -24,11 +24,20 @@ At the moment only the [Cloudinary] CDN is supported. But it is easy to add any 
 
 ## Installation
 
-Until it would be published to `RubyGems.org` your can install it by adding one line
+Nothing special:
 
-`gem 'middleman-thumbnailer', git: 'https://github.com/aliaksandrb/middleman-image-uploader-tag.git'`
+`gem install middleman-image-uploader-tag`
 
-to your `Gemfile` and run `bundle install`.
+Or just add the following line into your `Gemfile`:
+
+`gem 'middleman-image-uploader-tag'`
+
+ and after run `bundle install`.
+
+Also you can install the latest code directly from repository with:
+
+`gem 'middleman-image-uploader-tag', git: 'https://github.com/aliaksandrb/middleman-image-uploader-tag.git'`
+
 
 ## Configuration
 
@@ -85,5 +94,6 @@ The difference between `remote_image_tag` and `remote_image_tag_link` is that th
 
 [middleman]: http://middlemanapp.com/
 [cloudinary]: https://cloudinary.com/
+___
 
 Any feedback or issue report appreciated!
