@@ -41,7 +41,9 @@ Also you can install the latest code directly from repository with:
 
 ## Configuration
 
-Activate extension in your `config.rb`, providing credentials for remote provider:
+In you `config.rb`:
+
+Activate extension, providing credentials for remote provider:
 
 ```ruby
 activate :image_uploader_tag do |e|
@@ -58,9 +60,21 @@ activate :image_uploader_tag do |e|
 end
 ```
 
-Note: the `remote_images_dir` sets the only folder images being uploaded.
+Add ignore option to prevent remote images uploading during deploy:
 
-It is optional and by default has the value `'remote_images'`. You can change it but be sure to place it NOT within the images directory of the Middleman, just somewhere in the application root folder.
+```ruby
+ignore '/images/remote_images/*'
+```
+
+Also you could add a line in your `.gitignore` file, to prevent uploading images during development too:
+
+```
+source/images/remote_images
+```
+
+Note: the `remote_images_dir` sets the only folder images would remote uploaded.
+
+It is optional and by default has the value `'remote_images'`. You can change it but be sure to place it within the images directory of the Middleman.
 
 ## Usage
 

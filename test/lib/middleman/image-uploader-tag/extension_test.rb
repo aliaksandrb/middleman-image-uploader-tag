@@ -7,6 +7,7 @@ class ExtensionTest < Minitest::Test
 
   def setup
     @application = Class.new(Middleman::Application)
+    set_app_config({ images_dir: 'images' })
     @ext_instance = Middleman::ImageUploaderTag::Extension.new(@application)
     @ext_instance.app = @application
     @ext_class = @ext_instance.class
@@ -33,7 +34,7 @@ class ExtensionTest < Minitest::Test
   end
 
   def test_create_images_dir!
-    remote_images_dir = File.join(application.root, 'source', ext_class.remote_images_dir)
+    remote_images_dir = File.join(application.root, 'source', application.images_dir, ext_class.remote_images_dir)
 
     assert Dir.exists?(remote_images_dir)
 
@@ -88,7 +89,8 @@ class ExtensionTest < Minitest::Test
   end
 
   def test_image_location
-    remote_images_dir = File.join(application.root, 'source', ext_class.remote_images_dir)
+    remote_images_dir = File.join(application.root, 'source',
+                                  application.images_dir, ext_class.remote_images_dir)
 
     assert_equal remote_images_dir + '/test.jpg', ext_class.image_location('test.jpg')
     assert_equal remote_images_dir + '/test.jpg', ext_class.image_location('/test.jpg')
@@ -102,14 +104,15 @@ class ExtensionTest < Minitest::Test
   end
 
   def test_get_remote_path_during_development
+    remote_images_dir = File.join(application.images_dir, ext_class.remote_images_dir)
     create_fake_image!('test.jpg')
     create_fake_image!('test/test.jpg')
 
     set_app_config environment: :development
 
-    assert_equal 'test.jpg', ext_class.get_remote_path('test.jpg')
-    assert_equal '/test.jpg', ext_class.get_remote_path('/test.jpg')
-    assert_equal 'test/test.jpg', ext_class.get_remote_path('test/test.jpg')
+    assert_equal File.join('/', remote_images_dir, 'test.jpg'), ext_class.get_remote_path('test.jpg')
+    assert_equal File.join('/', remote_images_dir, '/test.jpg'), ext_class.get_remote_path('/test.jpg')
+    assert_equal File.join('/', remote_images_dir, 'test/test.jpg'), ext_class.get_remote_path('test/test.jpg')
   end
 
   def test_get_remote_path_raises_exception_for_absent_image

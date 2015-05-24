@@ -5,4 +5,4 @@
 /pkg
 
 # Ignore temporary remote images folder
-test/fixtures/test/source/remote_images/
+test/fixtures/test/source/images/remote_images/

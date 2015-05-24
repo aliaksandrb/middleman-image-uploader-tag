@@ -126,7 +126,9 @@ class CloudinaryCDNTest < Minitest::Test
   end
 
   def extension
-    Middleman::ImageUploaderTag::Extension.new(Class.new(Middleman::Application)).class
+    app = Class.new(Middleman::Application)
+    app.config.images_dir = 'images'
+    Middleman::ImageUploaderTag::Extension.new(app).class
   end
 end
 

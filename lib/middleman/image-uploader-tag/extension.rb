@@ -37,7 +37,7 @@ module Middleman
       end
 
       def self.image_location(image_path)
-        File.join(app.root, 'source', remote_images_dir, image_path)
+        File.join(app.root, 'source', app.images_dir, remote_images_dir, image_path)
       end
 
       def self.provider
@@ -56,7 +56,7 @@ module Middleman
         if app.config.environment == :build
           provider.get_remote_link(image_path)
         else
-          image_name
+          File.join('/', app.images_dir, remote_images_dir, image_name)
         end
       end
 
@@ -73,7 +73,7 @@ module Middleman
       end
 
       def self.create_images_dir!
-        img_dir = File.join(app.root, 'source', remote_images_dir)
+        img_dir = File.join(app.root, 'source', app.images_dir, remote_images_dir)
 
         Dir.mkdir(img_dir) unless Dir.exist?(img_dir)
       end
