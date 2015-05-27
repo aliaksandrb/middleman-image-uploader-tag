@@ -101,11 +101,12 @@ class CloudinaryCDNTest < Minitest::Test
 
     Cloudinary::Uploader.instance_eval do
       def upload(file, options)
-        { 'secure_url': 'http://cdn.com/test.jpg' }
+        { 'secure_url': 'https://cdn.com/test.jpg', 'url': 'http://cdn.com/test.jpg' }
       end
     end
 
-    assert_equal 'http://cdn.com/test.jpg', cdn.new(config).get_remote_link(image_path)
+    assert_equal 'https://cdn.com/test.jpg', cdn.new(config).get_remote_link(image_path, true)
+    assert_equal 'http://cdn.com/test.jpg', cdn.new(config).get_remote_link(image_path, false)
   end
 
   private

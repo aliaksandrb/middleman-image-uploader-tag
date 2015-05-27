@@ -72,6 +72,13 @@ class ExtensionTest < Minitest::Test
 
     assert_equal true, called
     assert_equal image, name_called
+
+    called = false
+    application.stub :remote_image_tag_link, image do
+      application.remote_image_tag 'test.jpg', true, alt: 'hello'
+    end
+
+    assert_equal true, called
   end
 
   def test_remote_image_tag_link_helper
@@ -79,10 +86,19 @@ class ExtensionTest < Minitest::Test
     image = ext_class.image_location('test.jpg')
 
     mock = Minitest::Mock.new
-    mock.expect :get_remote_path, image, ['test.jpg']
+    mock.expect :get_remote_path, image, ['test.jpg', false]
 
     ::Middleman::ImageUploaderTag.stub_const(:Extension, mock) do
       application.remote_image_tag_link 'test.jpg'
+    end
+
+    mock.verify
+
+    mock = Minitest::Mock.new
+    mock.expect :get_remote_path, image, ['test.jpg', true]
+
+    ::Middleman::ImageUploaderTag.stub_const(:Extension, mock) do
+      application.remote_image_tag_link 'test.jpg', true
     end
 
     mock.verify
@@ -130,10 +146,29 @@ class ExtensionTest < Minitest::Test
     image = ext_class.image_location('test.jpg')
 
     mock = Minitest::Mock.new
-    mock.expect :get_remote_link, image, [image]
+    mock.expect :instance_of?, true, [::Middleman::ImageUploaderTag::CloudinaryCDN]
+    mock.expect :get_remote_link, image, [image, false]
 
     ext_class.stub :provider, mock do
       ext_class.get_remote_path 'test.jpg'
+    end
+    mock.verify
+
+    mock = Minitest::Mock.new
+    mock.expect :instance_of?, true, [::Middleman::ImageUploaderTag::CloudinaryCDN]
+    mock.expect :get_remote_link, image, [image, true]
+
+    ext_class.stub :provider, mock do
+      ext_class.get_remote_path 'test.jpg', true
+    end
+    mock.verify
+
+    mock = Minitest::Mock.new
+    mock.expect :instance_of?, false, [::Middleman::ImageUploaderTag::CloudinaryCDN]
+    mock.expect :get_remote_link, image, [image]
+
+    ext_class.stub :provider, mock do
+      ext_class.get_remote_path 'test.jpg', true
     end
     mock.verify
   end
