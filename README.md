@@ -104,10 +104,24 @@ or as simple as
 <%= remote_image_tag 'test.png' %>
 ```
 
-The difference between `remote_image_tag` and `remote_image_tag_link` is that the first wraps link into `<img>` tag, but the other just produces the raw link as `https://cdn.blablabla.com/test.png`.
+The difference between `remote_image_tag` and `remote_image_tag_link` is that the first wraps link into `<img>` tag, but the other just produces the raw link as `http://cdn.blablabla.com/test.png`.
 
-[middleman]: http://middlemanapp.com/
-[cloudinary]: https://cloudinary.com/
+It is worth to notice, that both `remote_image_tag` and `remote_image_tag_link` support additional option for secure image delivering in case you use Cloudinary CDN (https, by default it is disabled). For example:
+
+```ruby
+<%= remote_image_tag_link 'test.png' %>
+# => 'http://cdn.blablabla.com/test.png'
+```
+
+```ruby
+<%= remote_image_tag_link 'test.png', true %>
+# => 'httpS://cdn.blablabla.com/test.png'
+```
 ___
 
 Any feedback or issue report appreciated!
+
+
+[middleman]: http://middlemanapp.com/
+[cloudinary]: https://cloudinary.com/
+
