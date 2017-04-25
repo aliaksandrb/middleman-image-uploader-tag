@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_runtime_dependency 'middleman-core', ['>= 3.3.12']
-  s.add_runtime_dependency 'cloudinary', '~>1.1.0'
+  s.add_runtime_dependency 'cloudinary', '~> 1.7.0'
 
   s.add_development_dependency 'minitest', '~> 5.6.1'
   s.add_development_dependency 'fivemat', '~> 1.3.1'
