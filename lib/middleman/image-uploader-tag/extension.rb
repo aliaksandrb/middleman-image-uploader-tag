@@ -25,11 +25,11 @@ module Middleman
       end
 
       helpers do
-        def remote_image_tag(image_name, secure = false, params = {})
+        def remote_image_tag(image_name, secure = true, params = {})
           image_tag remote_image_tag_link(image_name, secure), params
         end
 
-        def remote_image_tag_link(image_name, secure = false)
+        def remote_image_tag_link(image_name, secure = true)
           klass = ::Middleman::ImageUploaderTag::Extension
 
           klass.get_remote_path image_name, secure
@@ -49,7 +49,7 @@ module Middleman
         ).new(provider_options.provider_config)
       end
 
-      def self.get_remote_path(image_name, secure = false)
+      def self.get_remote_path(image_name, secure = true)
         image_path = image_location(image_name)
 
         raise NotFound unless File.exist?(image_path)
