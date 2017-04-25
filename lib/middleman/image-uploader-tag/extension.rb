@@ -25,19 +25,19 @@ module Middleman
       end
 
       helpers do
-        def remote_image_tag(image_name, secure = false, params = {})
-          image_tag remote_image_tag_link(image_name, secure), params
+        def remote_image_tag(image_name, secure = true, options = {}, params = {})
+          image_tag remote_image_tag_link(image_name, secure, options), params
         end
 
-        def remote_image_tag_link(image_name, secure = false)
+        def remote_image_tag_link(image_name, secure = true, options = {})
           klass = ::Middleman::ImageUploaderTag::Extension
 
-          klass.get_remote_path image_name, secure
+          klass.get_remote_path image_name, secure, options
         end
       end
 
       def self.image_location(image_path)
-        File.join(app.root, 'source', app.images_dir, remote_images_dir, image_path)
+        File.join(app.root, 'source', app.config[:images_dir], remote_images_dir, image_path)
       end
 
       def self.provider
@@ -49,18 +49,19 @@ module Middleman
         ).new(provider_options.provider_config)
       end
 
-      def self.get_remote_path(image_name, secure = false)
+      def self.get_remote_path(image_name, secure = true, options = {})
         image_path = image_location(image_name)
+
         raise NotFound unless File.exist?(image_path)
 
-        if app.config.environment == :build
+        if app.config[:mode] == :build
           if provider.instance_of? ::Middleman::ImageUploaderTag::CloudinaryCDN
-            provider.get_remote_link image_path, secure
+            provider.get_remote_link image_path, secure, options
           else
             provider.get_remote_link image_path
           end
         else
-          File.join('/', app.images_dir, remote_images_dir, image_name)
+          File.join('/', app.config[:images_dir], remote_images_dir, image_name)
         end
       end
 
@@ -77,7 +78,7 @@ module Middleman
       end
 
       def self.create_images_dir!
-        img_dir = File.join(app.root, 'source', app.images_dir, remote_images_dir)
+        img_dir = File.join(app.root, 'source', app.config[:images_dir], remote_images_dir)
 
         Dir.mkdir(img_dir) unless Dir.exist?(img_dir)
       end

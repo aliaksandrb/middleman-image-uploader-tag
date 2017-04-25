@@ -14,10 +14,10 @@ module Middleman
         end
       end
 
-      def get_remote_link(image_path, secure = false)
+      def get_remote_link(image_path, secure = true, options = {})
         raise NotFound if !image_path || !File.exist?(image_path.to_s)
 
-        image_attributes = upload_to_cloud(image_path)
+        image_attributes = upload_to_cloud(image_path, options)
         secure ? image_attributes[:secure_url] : image_attributes[:url]
       end
 
